@@ -1,4 +1,4 @@
-# Application Insights Sdk
+# Azure Application Insights
 
 
 This project was forked from and builds upon the official php sdk from windows, which is no longer mantained.

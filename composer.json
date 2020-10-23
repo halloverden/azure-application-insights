@@ -1,5 +1,5 @@
 {
-    "name": "halloverden/aai-sdk",
+    "name": "halloverden/azure-application-insights",
     "description": "This project extends the Application Insights API surface to support PHP.",
     "type": "library",
     "keywords": ["log","logging","telemetry","insights","monitoring"],
