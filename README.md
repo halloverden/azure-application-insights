@@ -2,6 +2,7 @@
 
 
 This project was forked from and builds upon the official php sdk from windows, which is no longer mantained.
+As of now, it only supports exception logging.
 
 ## About:
 - [Azure Application Insights](https://azure.microsoft.com/services/application-insights/)
@@ -33,7 +34,7 @@ $ composer require halloverden/application-insights-sdk
 
 ## Usage
 
-Once installed, you can send telemetry to Application Insights. Here are a few samples.
+Once installed, you can send exception telemetry to Application Insights. Here are a few samples.
 
 >**Note**: before you can send data to you will need an instrumentation key. Please see the [Getting an Application Insights Instrumentation Key](https://github.com/Microsoft/AppInsights-Home/wiki#getting-an-application-insights-instrumentation-key) section for more information.
 
@@ -52,8 +53,8 @@ $context->getUserContext()->setId('YOUR USER ID');
 $context->getApplicationContext()->setVer('YOUR VERSION');
 $context->getLocationContext()->setIp('YOUR IP');
 
-// Start tracking
-$telemetryClient->trackEvent('name of your event');
+// Start tracking throwables
+$telemetryClient->trackException($throwable);
 $telemetryClient->flush();
 ```
 
@@ -65,79 +66,6 @@ reference to Request
 ```php
 $telemetryClient->getContext()->getOperationContext()->setId('XX');
 $telemetryClient->getContext()->getOperationContext()->setName('GET Index');
-```
-
-### Sending a simple event telemetry item with event name
-
-```php
-$telemetryClient->trackEvent('name of your event');
-$telemetryClient->flush();
-```
-
-### Sending an event telemetry item with custom properties and measurements
-
-```php
-$telemetryClient->trackEvent('name of your event', ['MyCustomProperty' => 42, 'MyCustomProperty2' => 'test'], ['duration', 42]);
-$telemetryClient->flush();
-```
-
-**Sending more than one telemetry item before sending to the service is also
-supported; the API will batch everything until you call flush()**
-
-```php
-$telemetryClient->trackEvent('name of your event');
-$telemetryClient->trackEvent('name of your second event');
-$telemetryClient->flush();
-```
-
-### Sending a simple page view telemetry item with page name and url
-
-```php
-$telemetryClient->trackPageView('myPageView', 'http://www.foo.com');
-$telemetryClient->flush();
-```
-
-### Sending a page view telemetry item with duration, custom properties and measurements
-
-```php
-$telemetryClient->trackPageView('myPageView', 'http://www.foo.com', 256, ['InlineProperty' => 'test_value'], ['duration' => 42.0]);
-$telemetryClient->flush();
-```
-
-### Sending a simple metric telemetry item with metric name and value
-
-```php
-$telemetryClient->trackMetric('myMetric', 42.0);
-$telemetryClient->flush();
-```
-
-### Sending a metric telemetry item with point type, count, min, max, standard deviation and measurements
-
-```php
-$telemetryClient->trackMetric('myMetric', 42.0, \ApplicationInsights\Channel\Contracts\Data_Point_Type::Aggregation, 5, 0, 1, 0.2, ['InlineProperty' => 'test_value']);
-$telemetryClient->flush();
-```
-
-### Sending a simple message telemetry item with message
-
-```php
-$telemetryClient->trackMessage('myMessage', \ApplicationInsights\Channel\Contracts\Message_Severity_Level::INFORMATION, ['InlineProperty' => 'test_value']);
-$telemetryClient->flush();
-```
-
-**Sending a simple request telemetry item with request name, url and start
-time**
-
-```php
-$telemetryClient->trackRequest('myRequest', 'http://foo.bar', time());
-$telemetryClient->flush();
-```
-
-### Sending a request telemetry item with duration, http status code, whether or not the request succeeded, custom properties and measurements
-
-```php
-$telemetryClient->trackRequest('myRequest', 'http://foo.bar', time(), 3754, 200, true, ['InlineProperty' => 'test_value'], ['duration_inner' => 42.0]);
-$telemetryClient->flush();
 ```
 
 ### Sending an exception telemetry, with custom properties and metrics
@@ -184,34 +112,4 @@ class Handle_Exceptions
         }
     }
 }
-```
-
-### Sending a successful SQL dependency telemetry item
-
-```php
-$telemetryClient->trackDependency('Query table', "SQL", 'SELECT * FROM table;', time(), 122, true);
-$telemetryClient->flush();
-```
-
-### Sending a failed HTTP dependency telemetry item
-
-```php
-$telemetryClient->trackDependency('method', "HTTP", "http://example.com/api/method", time(), 324, false, 503);
-$telemetryClient->flush();
-```
-
-### Sending any other kind dependency telemetry item
-
-```php
-$telemetryClient->trackDependency('Name of operation', "service", 'Arguments', time(), 23, true);
-$telemetryClient->flush();
-```
-
-### Changing the operation id (which links actions together)
-
-```php
-$telemetryClient->trackMetric('interestingMetric', 10);
-$telemetryClient->getContext()->getOperationContext()->setId(\ApplicationInsights\Channel\Contracts\Utils::returnGuid())
-$telemetryClient->trackMetric('differentOperationMetric', 11);
-$telemetryClient->flush();
 ```
