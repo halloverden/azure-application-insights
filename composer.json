@@ -6,7 +6,7 @@
     "homepage": "https://github.com/Microsoft/ApplicationInsights-PHP",
     "license": "MIT",
     "require": {
-        "php": "^7.1",
+        "php": ">=7.4",
         "guzzlehttp/guzzle": "^6",
         "ext-json": "*"
     },
